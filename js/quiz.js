@@ -1,14 +1,22 @@
 console.log('Lets Code! {^_^}');
-console.log('Урок 7. Прогресс бар. Часть 1');
+console.log('Часть 4. Урок 9.');
 
 const cards = document.querySelectorAll('.plate');
  
-let currentCard = 0;
+// Для перемещения по карточкам
+let currentCard = 2;
+// Отображение прогресса между карточками
+let currentProgres = 0;
+
 // скрываем кнопку "назад" на первой карточке
 cards[currentCard].querySelector('[data-nav = "prev"]').remove();
+
 // отображение 1й карточки
 cards[currentCard].classList.add('visible');
 console.log('currentCard', currentCard);
+
+// Прогрессбар 0%
+updateProgressBar();
  
 // перемещение по карточкам
 window.addEventListener ('click', function (event) {
@@ -17,17 +25,28 @@ window.addEventListener ('click', function (event) {
     if(event.target.closest('[data-nav = "next"]')) {
         console.log('next page');
 
-        const result = checkOnAnAnser(cards[currentCard]);
+        const result = checkOnAnsver(cards[currentCard]);
         const answersWrapper = cards[currentCard].querySelector('[data-answers]');
 
         if(result) {
-            answersWrapper.classList.remove('required');
-            cards[currentCard].classList.remove('visible');
-            // увеличиваем индекс массива с карточками
-            currentCard = currentCard + 1;
-            // показываем карточку с обновленным индексом
-            cards[currentCard].classList.add('visible');    
-        } else {
+
+
+            // Прогрессбар
+            updateProgressBar('next');
+             
+
+            // Перемещение
+            setTimeout(function() {
+                answersWrapper.classList.remove('required');
+                cards[currentCard].classList.remove('visible');
+                // увеличиваем индекс массива с карточками
+                currentCard = currentCard + 1;
+                // показываем карточку с обновленным индексом
+                cards[currentCard].classList.add('visible');    
+    
+            }, 500);
+
+         } else {
             answersWrapper.classList.add('required');
             alert('Выберите ответ что бы продолжить');
         } 
@@ -39,24 +58,29 @@ window.addEventListener ('click', function (event) {
     if(event.target.closest('[data-nav = "prev"]')) {
         console.log('prev page');     
         
+        // Прогресс бар
+        updateProgressBar('prev');
+
         
-        if(currentCard === 0) return;
+        // Перемещение
+        setTimeout(function() {
+            if(currentCard === 0) return;
         
-        cards[currentCard].classList.remove('visible');
-        
-        // тоже самое но индекс уменьшаем
-        currentCard = currentCard - 1;
- 
-        cards[currentCard].classList.add('visible');
-        
-        console.log('currentCard', currentCard);
-    }
+            cards[currentCard].classList.remove('visible');
+            
+            // тоже самое но индекс уменьшаем
+            currentCard = currentCard - 1;
+     
+            cards[currentCard].classList.add('visible');
+            
+            console.log('currentCard', currentCard);    
+        }, 500);
+     }
 })
 
 
 // проверка полей на заполенность
-
-function checkOnAnAnser(card) {
+function checkOnAnsver(card) {
      // проверка радио кнопки
     const radioBtns = card.querySelectorAll('input[type="radio"]');
 
@@ -66,7 +90,6 @@ function checkOnAnAnser(card) {
 
     // проверка на чекбоксы
     const checkBoxes = card.querySelectorAll('input[type="checkbox"]');
-    console.log(checkBoxes);
     if(checkBoxes.length > 0) {
         for(let checkBox of checkBoxes) {
             if(checkBox.checked) return true;
@@ -77,3 +100,44 @@ function checkOnAnAnser(card) {
 }  
 
 
+// функция отвечает за отображения прогресса в прохождении теста
+function updateProgressBar (direction = 'start') {
+
+    if(direction === 'next') {
+        currentProgres = currentProgres + 1;
+    } else if (direction === 'prev') {
+        currentProgres = currentProgres - 1;
+    }
+    
+    
+    const progressValue = document.querySelectorAll('.progress__label strong');
+    const progressLineBar = document.querySelectorAll('.progress__line-bar');
+    const countCards = document.querySelectorAll('[data-progress]').length;
+    
+    const progress = Math.round((currentProgres * 100) / countCards);
+
+    progressValue.forEach(function(item) {
+        item.innerText = progress + '%';
+
+    })
+
+    progressLineBar.forEach(function(item) {
+        item.style.width = progress + '%';
+        
+    })
+
+}
+
+
+// маска телефона
+mask('#tel');
+ 
+const resultBtn = document.querySelector('#submitForm');
+const telInput = document.querySelector('#tel');
+
+resultBtn.onclick = function () {
+    if(telInput.value === '+' || telInput.value.length <6 ) {
+        telInput.value = '';
+        console.log('Меньше 6ти символов');
+    }
+}
