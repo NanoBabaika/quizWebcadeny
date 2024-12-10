@@ -1,10 +1,10 @@
 console.log('Lets Code! {^_^}');
-console.log('Часть 4. Урок 9.');
+console.log('Часть 4. Урок 10.');
 
 const cards = document.querySelectorAll('.plate');
  
 // Для перемещения по карточкам
-let currentCard = 2;
+let currentCard = 0;
 // Отображение прогресса между карточками
 let currentProgres = 0;
 
@@ -141,3 +141,16 @@ resultBtn.onclick = function () {
         console.log('Меньше 6ти символов');
     }
 }
+
+
+// Фокус для чекбокса
+
+const checkBoxPolicy = document.querySelector('#policy');
+
+checkBoxPolicy.addEventListener('focus', function () {
+    this.closest('label').classList.add('hovered');
+})
+
+checkBoxPolicy.addEventListener('blur', function () {
+    this.closest('label').classList.remove('hovered');
+})
