@@ -1,7 +1,10 @@
 console.log('Lets Code! {^_^}');
-console.log('Часть 4. Урок 10.');
+console.log('Часть 4. Урок 11.');
 
 const cards = document.querySelectorAll('.plate');
+
+// Прячем все карточки
+cards.forEach(function(card) {card.classList.add('none')});
  
 // Для перемещения по карточкам
 let currentCard = 0;
@@ -12,7 +15,9 @@ let currentProgres = 0;
 cards[currentCard].querySelector('[data-nav = "prev"]').remove();
 
 // отображение 1й карточки
+cards[currentCard].classList.remove('none');
 cards[currentCard].classList.add('visible');
+
 console.log('currentCard', currentCard);
 
 // Прогрессбар 0%
@@ -29,26 +34,37 @@ window.addEventListener ('click', function (event) {
         const answersWrapper = cards[currentCard].querySelector('[data-answers]');
 
         if(result) {
-
-
             // Прогрессбар
             updateProgressBar('next');
              
 
             // Перемещение
             setTimeout(function() {
-                answersWrapper.classList.remove('required');
+                // скрываем текущую с анимацией
                 cards[currentCard].classList.remove('visible');
-                // увеличиваем индекс массива с карточками
-                currentCard = currentCard + 1;
-                // показываем карточку с обновленным индексом
-                cards[currentCard].classList.add('visible');    
-    
+                // убираем со страницы
+                setTimeout(function(){
+                    cards[currentCard].classList.add('none');
+
+                    // показываем след , готовим к анимации
+                    currentCard = currentCard + 1;
+                    cards[currentCard].classList.remove('none');
+                    setTimeout(function() {
+                        // отображаем след карточку с анимацией
+                        cards[currentCard].classList.add('visible');    
+                    }, 100);
+ 
+                }, 500);
+
+
+                answersWrapper.classList.remove('required');
+                 // увеличиваем индекс массива с карточками
+     
             }, 500);
 
          } else {
             answersWrapper.classList.add('required');
-            alert('Выберите ответ что бы продолжить');
+            alert('Выберите вариант ответа что бы продолжить');
         } 
 
         // скрываем текущую карточку
@@ -67,12 +83,21 @@ window.addEventListener ('click', function (event) {
             if(currentCard === 0) return;
         
             cards[currentCard].classList.remove('visible');
+
             
-            // тоже самое но индекс уменьшаем
-            currentCard = currentCard - 1;
-     
-            cards[currentCard].classList.add('visible');
+            setTimeout(function() {
+                cards[currentCard].classList.add('none');
+
+                currentCard = currentCard - 1;
+                cards[currentCard].classList.remove('none');    
+                // отображаем предыдущую карточку с анимацией
+                setTimeout(function() {
+                    cards[currentCard].classList.add('visible');
+                }, 100) 
+                 
+            }, 500)
             
+ 
             console.log('currentCard', currentCard);    
         }, 500);
      }
@@ -154,3 +179,6 @@ checkBoxPolicy.addEventListener('focus', function () {
 checkBoxPolicy.addEventListener('blur', function () {
     this.closest('label').classList.remove('hovered');
 })
+
+
+// скрипт для анимации
